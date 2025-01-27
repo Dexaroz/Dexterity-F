@@ -26,6 +26,16 @@ public class Bill {
         this.total = calculateTotal();
     }
 
+    public Bill(Client client, List<BillItem> items, Instant date, double taxRate, double subTotal, double total){
+        this.id = ID_CLIENT.getAndIncrement();
+        this.client = client;
+        this.items = List.copyOf(items);
+        this.date = date;
+        this.taxRate = taxRate;
+        this.subTotal = subTotal;
+        this.total = total;
+    }
+
     public Bill editBill(Client client, List<BillItem> items, double taxRate){
         return new Bill(client, items, taxRate);
     }

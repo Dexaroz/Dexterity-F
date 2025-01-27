@@ -14,6 +14,10 @@ public record Client(int id, String name, Email email, PhoneNumber phoneNumber, 
         this(ID_CLIENT.getAndIncrement(), name, Email.of(email), PhoneNumber.of(phoneNumber), Address.of(country, province, city, postalCode, street, number, suite), TaxID.of(taxID));
     }
 
+    public Client(String name, Email email, PhoneNumber phoneNumber, Address address, TaxID taxID){
+        this(ID_CLIENT.getAndIncrement(), name, email, phoneNumber, address, taxID);
+    }
+
     public Client editClient(String name, String email, String phoneNumber, String country, String province, String city, int postalCode, String street, int number, String suite , String taxID){
         return new Client(this.id, name, Email.of(email), PhoneNumber.of(phoneNumber), Address.of(country, province, city, postalCode, street, number, suite), TaxID.of(taxID));
     }
