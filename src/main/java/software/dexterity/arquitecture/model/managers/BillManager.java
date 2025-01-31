@@ -7,11 +7,12 @@ import software.dexterity.arquitecture.model.Client;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BillManagers {
+public class BillManager {
     private final List<Bill> bills;
 
-    public BillManagers() {
+    public BillManager() {
         this.bills = new ArrayList<>();
+
     }
 
     public void addBill(Client client, List<BillItem> items, double taxRate){
@@ -28,6 +29,6 @@ public class BillManagers {
     }
 
     public List<Bill> getBills(){
-        return bills;
+        return new ArrayList<>(bills);
     }
 }

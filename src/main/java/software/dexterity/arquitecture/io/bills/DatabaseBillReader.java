@@ -43,7 +43,7 @@ public class DatabaseBillReader implements BillReader {
         double total = resultSet.getDouble("total");
         Timestamp date = resultSet.getTimestamp("date");
 
-        return new Bill(client, items, date.toInstant(), taxRate, subtotal, total);
+        return new Bill(client, items, date.toLocalDateTime(), taxRate, subtotal, total);
     }
 
     private List<BillItem> deserializeItems(String items) {

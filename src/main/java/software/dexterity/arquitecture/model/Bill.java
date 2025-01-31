@@ -1,6 +1,6 @@
 package software.dexterity.arquitecture.model;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -9,7 +9,7 @@ public class Bill {
     private final int id;
     private final Client client;
     private final List<BillItem> items;
-    private final Instant date;
+    private final LocalDateTime date;
     private final double taxRate;
     private final double subTotal;
     private final double total;
@@ -20,13 +20,13 @@ public class Bill {
         this.id = ID_CLIENT.getAndIncrement();
         this.client = client;
         this.items = List.copyOf(items);
-        this.date = Instant.now();
+        this.date = LocalDateTime.now();
         this.taxRate = taxRate;
         this.subTotal = calculateSubtotal();
         this.total = calculateTotal();
     }
 
-    public Bill(Client client, List<BillItem> items, Instant date, double taxRate, double subTotal, double total){
+    public Bill(Client client, List<BillItem> items, LocalDateTime date, double taxRate, double subTotal, double total){
         this.id = ID_CLIENT.getAndIncrement();
         this.client = client;
         this.items = List.copyOf(items);
@@ -60,7 +60,7 @@ public class Bill {
         return items;
     }
 
-    public Instant getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
