@@ -4,6 +4,7 @@ import software.dexterity.app.swing.support.DarkGoldPalette;
 import software.dexterity.app.swing.support.SwingDesignButton;
 import software.dexterity.app.swing.support.SwingDesignInputField;
 import software.dexterity.app.swing.support.SwingDesingTable;
+import software.dexterity.arquitecture.control.Command;
 import software.dexterity.arquitecture.model.managers.BillManager;
 import software.dexterity.arquitecture.model.managers.ClientManager;
 import software.dexterity.arquitecture.view.VisualComponent;
@@ -11,17 +12,19 @@ import software.dexterity.arquitecture.view.VisualComponent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Map;
 
 public class SwingBillContent extends JPanel implements VisualComponent {
 
     private static final Color BACKGROUND_COLOR = DarkGoldPalette.Background.getColor();
     private static final Color TEXT_COLOR = DarkGoldPalette.TextColor.getColor();
     private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 32);
-    private static final Font SEARCH_FONT = new Font("Arial", Font.PLAIN, 18);
 
     private final BillManager billManager;
+    private final Map<String, Command> commands;
 
-    public SwingBillContent(BillManager billManager) {
+    public SwingBillContent(BillManager billManager, Map<String, Command> commands) {
+        this.commands = commands;
         this.setBackground(BACKGROUND_COLOR);
         this.setLayout(new BorderLayout());
 
@@ -66,8 +69,18 @@ public class SwingBillContent extends JPanel implements VisualComponent {
     }
 
     private Component createButtonPabel(){
-        SwingDesignButton button = new SwingDesignButton("Add Client");
-        return button;
+        SwingDesignButton button = new SwingDesignButton("Add Bill");
+        JButton component = button.getButton();
+        component.addActionListener(e -> {
+            commands.get("Add").execute();
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(button);
+        buttonPanel.add(Box.createVerticalStrut(10));
+        return buttonPanel;
     }
 
     @Override

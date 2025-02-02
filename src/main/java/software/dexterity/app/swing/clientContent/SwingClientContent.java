@@ -4,12 +4,14 @@ import software.dexterity.app.swing.support.DarkGoldPalette;
 import software.dexterity.app.swing.support.SwingDesignButton;
 import software.dexterity.app.swing.support.SwingDesignInputField;
 import software.dexterity.app.swing.support.SwingDesingTable;
+import software.dexterity.arquitecture.control.Command;
 import software.dexterity.arquitecture.model.managers.ClientManager;
 import software.dexterity.arquitecture.view.VisualComponent;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Map;
 
 public class SwingClientContent extends JPanel implements VisualComponent {
 
@@ -19,8 +21,10 @@ public class SwingClientContent extends JPanel implements VisualComponent {
     private static final Font SEARCH_FONT = new Font("Arial", Font.PLAIN, 18);
 
     private final ClientManager clientManager;
+    private final Map<String, Command> commands;
 
-    public SwingClientContent(ClientManager clientManager) {
+    public SwingClientContent(ClientManager clientManager, Map<String, Command> commands) {
+        this.commands = commands;
         this.setBackground(BACKGROUND_COLOR);
         this.setLayout(new BorderLayout());
 
@@ -66,7 +70,17 @@ public class SwingClientContent extends JPanel implements VisualComponent {
 
     private Component createButtonPabel(){
         SwingDesignButton button = new SwingDesignButton("Add Client");
-        return button;
+        JButton component = button.getButton();
+        component.addActionListener(e -> {
+            commands.get("Add").execute();
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(button);
+        buttonPanel.add(Box.createVerticalStrut(10));
+        return buttonPanel;
     }
 
     @Override

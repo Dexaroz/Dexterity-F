@@ -2,6 +2,7 @@ package software.dexterity.app.swing.homeContent;
 
 import software.dexterity.app.swing.support.DarkGoldPalette;
 import software.dexterity.app.swing.support.SwingJFreeLineChartDisplay;
+import software.dexterity.arquitecture.control.Command;
 import software.dexterity.arquitecture.model.Bill;
 import software.dexterity.arquitecture.model.BillItem;
 import software.dexterity.arquitecture.model.Client;
@@ -24,8 +25,10 @@ public class SwingHomeContent extends JPanel implements VisualComponent {
 
     private final BillManager billManager;
     //private final SwingJFreeLineChartDisplay invoicesChart;
+    private final Map<String, Command> commands;
 
-    public SwingHomeContent(BillManager billManager) {
+    public SwingHomeContent(BillManager billManager, Map<String, Command> commands) {
+        this.commands = commands;
         this.setBackground(BACKGROUND_COLOR);
         this.setLayout(new BorderLayout());
 

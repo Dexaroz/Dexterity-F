@@ -1,6 +1,7 @@
-package software.dexterity.arquitecture.control;
+package software.dexterity.arquitecture.control.item;
 
 import software.dexterity.app.swing.MainFrame;
+import software.dexterity.arquitecture.control.Command;
 
 public class ItemsContentCommand implements Command {
 

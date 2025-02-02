@@ -1,12 +1,20 @@
 package software.dexterity.app.swing;
 
 import software.dexterity.app.swing.billsContent.SwingBillContent;
+import software.dexterity.app.swing.billsContent.SwingBillFormDialogFactory;
 import software.dexterity.app.swing.clientContent.SwingClientContent;
+import software.dexterity.app.swing.clientContent.SwingClientFormDialogFactory;
 import software.dexterity.app.swing.homeContent.SwingHomeContent;
-import software.dexterity.app.swing.itemsContent.SwingItemsContent;
-import software.dexterity.app.swing.support.DarkGoldPalette;
+import software.dexterity.app.swing.itemsContent.SwingItemFormDialogFactory;
+import software.dexterity.app.swing.itemsContent.SwingItemContent;
 import software.dexterity.app.swing.topbar.SwingTopbarComponent;
 import software.dexterity.arquitecture.control.*;
+import software.dexterity.arquitecture.control.bill.AddBillCommand;
+import software.dexterity.arquitecture.control.bill.BillsContentCommand;
+import software.dexterity.arquitecture.control.client.AddClientCommand;
+import software.dexterity.arquitecture.control.client.ClientsContentCommand;
+import software.dexterity.arquitecture.control.item.AddItemCommand;
+import software.dexterity.arquitecture.control.item.ItemsContentCommand;
 import software.dexterity.arquitecture.model.managers.BillManager;
 import software.dexterity.arquitecture.model.managers.ClientManager;
 import software.dexterity.arquitecture.model.managers.ItemManager;
@@ -43,20 +51,24 @@ public class MainFrame extends JFrame {
         this.add(currentContent, BorderLayout.CENTER);
     }
 
+    public void put(String name, Command command){
+        commands.put(name, command);
+    }
+
     public void showHomeContent() {
-        updateContent(new SwingHomeContent(billManager));
+        updateContent(new SwingHomeContent(billManager, getHomeCommands()));
     }
 
     public void showClientContent() {
-        updateContent(new SwingClientContent(clientManager));
+        updateContent(new SwingClientContent(clientManager, getClientCommands()));
     }
 
     public void showBillContent() {
-        updateContent(new SwingBillContent(billManager));
+        updateContent(new SwingBillContent(billManager, getBillCommands()));
     }
 
     public void showItemContent() {
-        updateContent(new SwingItemsContent(itemManager));
+        updateContent(new SwingItemContent(itemManager, getItemsCommands()));
     }
 
     public BillManager getBillManager(){
@@ -69,6 +81,31 @@ public class MainFrame extends JFrame {
 
     public ItemManager getItemManager(){
         return itemManager;
+    }
+
+    private Map<String, Command> getHomeCommands(){
+        return null;
+    }
+
+    private Map<String, Command> getBillCommands(){
+        Map<String, Command> commands = new HashMap<>();
+
+        commands.put("Add", new AddBillCommand(this, billManager, new SwingBillFormDialogFactory()));
+        return commands;
+    }
+
+    private Map<String, Command> getClientCommands(){
+        Map<String, Command> commands = new HashMap<>();
+
+        commands.put("Add", new AddClientCommand(this, clientManager, new SwingClientFormDialogFactory()));
+        return commands;
+    }
+
+    private Map<String, Command> getItemsCommands(){
+        Map<String, Command> commands = new HashMap<>();
+
+        commands.put("Add", new AddItemCommand(this, itemManager, new SwingItemFormDialogFactory()));
+        return commands;
     }
 
     private void updateContent(Component newContent) {
@@ -86,8 +123,8 @@ public class MainFrame extends JFrame {
     private Component createTopbar() {
         SwingTopbarComponent topbarComponent = new SwingTopbarComponent("Dexterity F", getClass().getResource("/logo.png"));
         topbarComponent.addButton("Home", new HomeContentCommand(this));
-        topbarComponent.addButton("Bills", new ClientContentCommand(this));
-        topbarComponent.addButton("Clients", new BillsContentCommand(this));
+        topbarComponent.addButton("Bills", new BillsContentCommand(this));
+        topbarComponent.addButton("Clients", new ClientsContentCommand(this));
         topbarComponent.addButton("Items", new ItemsContentCommand(this));
         return topbarComponent;
     }

@@ -4,25 +4,26 @@ import software.dexterity.app.swing.support.DarkGoldPalette;
 import software.dexterity.app.swing.support.SwingDesignButton;
 import software.dexterity.app.swing.support.SwingDesignInputField;
 import software.dexterity.app.swing.support.SwingDesingTable;
-import software.dexterity.arquitecture.model.managers.BillManager;
+import software.dexterity.arquitecture.control.Command;
 import software.dexterity.arquitecture.model.managers.ItemManager;
 import software.dexterity.arquitecture.view.VisualComponent;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Map;
 
-public class SwingItemsContent extends JPanel implements VisualComponent {
+public class SwingItemContent extends JPanel implements VisualComponent {
 
     private static final Color BACKGROUND_COLOR = DarkGoldPalette.Background.getColor();
-    private static final Color BACKGROUND_INPUT_COLOR = DarkGoldPalette.SearchInputBackground.getColor();
     private static final Color TEXT_COLOR = DarkGoldPalette.TextColor.getColor();
     private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 32);
-    private static final Font SEARCH_FONT = new Font("Arial", Font.PLAIN, 18);
 
     private final ItemManager itemManager;
+    private final Map<String, Command> commands;
 
-    public SwingItemsContent(ItemManager itemManager) {
+    public SwingItemContent(ItemManager itemManager, Map<String, Command> commands) {
+        this.commands = commands;
         this.setBackground(BACKGROUND_COLOR);
         this.setLayout(new BorderLayout());
 
@@ -31,7 +32,7 @@ public class SwingItemsContent extends JPanel implements VisualComponent {
         this.setBorder(new EmptyBorder(20,90,50,90));
         this.add(createTitlePanel(), BorderLayout.NORTH);
         this.add(createTablePanel(), BorderLayout.CENTER);
-        this.add(createButtonPabel(), BorderLayout.SOUTH);
+        this.add(createButtonPanel(), BorderLayout.SOUTH);
     }
 
     private Component createTitlePanel() {
@@ -66,9 +67,20 @@ public class SwingItemsContent extends JPanel implements VisualComponent {
         return scrollPane;
     }
 
-    private Component createButtonPabel(){
-        SwingDesignButton button = new SwingDesignButton("Add Client");
-        return button;
+    private Component createButtonPanel(){
+        SwingDesignButton button = new SwingDesignButton("Add Item");
+        JButton component = button.getButton();
+        component.addActionListener(e -> {
+            commands.get("Add").execute();
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(button);
+        buttonPanel.add(Box.createVerticalStrut(10));
+
+        return buttonPanel;
     }
 
     @Override

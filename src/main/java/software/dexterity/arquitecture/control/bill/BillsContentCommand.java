@@ -1,6 +1,7 @@
-package software.dexterity.arquitecture.control;
+package software.dexterity.arquitecture.control.bill;
 
 import software.dexterity.app.swing.MainFrame;
+import software.dexterity.arquitecture.control.Command;
 
 public class BillsContentCommand implements Command {
 
