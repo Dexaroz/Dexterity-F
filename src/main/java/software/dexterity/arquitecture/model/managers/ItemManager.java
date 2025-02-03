@@ -28,4 +28,8 @@ public class ItemManager {
     public List<Item> getItems(){
         return items;
     }
+
+    public Item[] getItemsToArray(){
+        return items.toArray(new Item[0]);
+    }
 }

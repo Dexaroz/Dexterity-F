@@ -1,6 +1,7 @@
 package software.dexterity.arquitecture.model.managers;
 
 import software.dexterity.arquitecture.model.Client;
+import software.dexterity.arquitecture.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,5 +28,9 @@ public class ClientManager {
 
     public List<Client> getClients(){
         return clients;
+    }
+
+    public Client[] getClientsToArray(){
+        return clients.toArray(new Client[0]);
     }
 }

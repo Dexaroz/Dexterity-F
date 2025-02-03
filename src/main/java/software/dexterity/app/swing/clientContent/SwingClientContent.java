@@ -33,7 +33,7 @@ public class SwingClientContent extends JPanel implements VisualComponent {
         this.setBorder(new EmptyBorder(20,90,50,90));
         this.add(createTitlePanel(), BorderLayout.NORTH);
         this.add(createTablePanel(), BorderLayout.CENTER);
-        this.add(createButtonPabel(), BorderLayout.SOUTH);
+        this.add(createButtonPanel(), BorderLayout.SOUTH);
     }
 
     private Component createTitlePanel() {
@@ -68,7 +68,7 @@ public class SwingClientContent extends JPanel implements VisualComponent {
         return scrollPane;
     }
 
-    private Component createButtonPabel(){
+    private Component createButtonPanel(){
         SwingDesignButton button = new SwingDesignButton("Add Client");
         JButton component = button.getButton();
         component.addActionListener(e -> {

@@ -4,7 +4,8 @@ import software.dexterity.app.swing.support.DarkGoldPalette;
 import software.dexterity.app.swing.support.SwingDesignButton;
 import software.dexterity.app.swing.support.SwingDesignInputField;
 import software.dexterity.arquitecture.control.Command;
-import software.dexterity.arquitecture.model.BillItem;
+import software.dexterity.arquitecture.control.bill.AddBillCommand;
+import software.dexterity.arquitecture.control.bill.CancelAddBillCommand;
 import software.dexterity.arquitecture.model.Client;
 import software.dexterity.arquitecture.model.Item;
 import software.dexterity.arquitecture.model.managers.BillManager;
@@ -13,18 +14,19 @@ import software.dexterity.arquitecture.model.managers.ItemManager;
 import software.dexterity.arquitecture.view.bill.BillFormDialog;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class SwingBillDialog extends JDialog implements BillFormDialog {
 
     private static final Color BACKGROUND_COLOR = DarkGoldPalette.Background.getColor();
     private static final Color SEARCH_INPUT_BACKGROUND = DarkGoldPalette.SearchInputBackground.getColor();
+    private static final Color LINE_BORDER = DarkGoldPalette.BorderLineTable.getColor();
     private static final Color TEXT_COLOR = DarkGoldPalette.TextColor.getColor();
-    private static final Font TITLE_FONT = new Font("Arial", Font.PLAIN, 14);
+    private static final Font TEXT_FONT = new Font("Arial", Font.PLAIN, 14);
+
 
     private final BillManager billManager;
 
@@ -39,15 +41,17 @@ public class SwingBillDialog extends JDialog implements BillFormDialog {
         this.billManager = billManager;
         this.commands = commands;
 
-        this.setSize(700, 700);
-        this.setMaximumSize(new Dimension(700, 700));
-        this.setMinimumSize(new Dimension(700, 700));
+        this.setSize(700,  900);
+        this.setMaximumSize(new Dimension(700, 900));
+        this.setMinimumSize(new Dimension(700, 900));
+
+
         this.setLocationRelativeTo(parentFrame);
-        this.setLayout(new BorderLayout());
+        this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         this.getContentPane().setBackground(BACKGROUND_COLOR);
 
-        // Initialize form components
         this.add(createFormPanel(), BorderLayout.CENTER);
+        this.add(Box.createVerticalStrut(10));
         this.add(createButtonPanel(), BorderLayout.SOUTH);
     }
 
@@ -57,87 +61,93 @@ public class SwingBillDialog extends JDialog implements BillFormDialog {
         panel.setOpaque(false);
         panel.setBorder(new EmptyBorder(20, 40, 20, 40));
 
-        // Client selection
-        clientComboBox = new JComboBox<>(getClientsArray());
-        clientComboBox.setBackground(DarkGoldPalette.SearchInputBackground.getColor());
-        clientComboBox.setForeground(TEXT_COLOR);
-        clientComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
-        panel.add(createLabeledComponent("Select a client:", clientComboBox));
+        JPanel clientComboBoxPanel = getClientComboBox();
+        clientComboBoxPanel.setPreferredSize(new Dimension(700, 90));
+        clientComboBoxPanel.setMaximumSize(new Dimension(700, 90));
+        panel.add(Box.createVerticalStrut(10));
 
-        // Item selection
+        panel.add(clientComboBoxPanel);
+        panel.add(Box.createVerticalStrut(10));
+
+        panel.add(getItemList());
+        panel.add(Box.createVerticalStrut(10));
+
+        panel.add(getTaxRateField());
+
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(getTotalAmountLabel());
+
+        return panel;
+    }
+
+    private JPanel getClientComboBox(){
+        clientComboBox = new JComboBox<>(getClientsArray());
+        clientComboBox.setBackground(SEARCH_INPUT_BACKGROUND);
+        clientComboBox.setForeground(TEXT_COLOR);
+        clientComboBox.setFont(TEXT_FONT);
+
+        return createLabeledComponent("Select a client:", clientComboBox);
+    }
+
+    private JPanel getItemList(){
         itemList = new JList<>(getItemsArray());
         itemList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         itemList.setBackground(BACKGROUND_COLOR);
         itemList.setForeground(TEXT_COLOR);
-        itemList.setFont(new Font("Arial", Font.PLAIN, 14));
+        itemList.setFont(TEXT_FONT);
+
         JScrollPane itemScrollPane = new JScrollPane(itemList);
-        itemScrollPane.setBorder(BorderFactory.createEmptyBorder());
-        panel.add(createLabeledComponent("Items:", itemScrollPane));
+        itemScrollPane.setPreferredSize(new Dimension(400, 500));
+        itemScrollPane.setMaximumSize(new Dimension(400, 500));
+        itemScrollPane.setBorder(BorderFactory.createLineBorder(LINE_BORDER));
 
-        // Tax rate input
+        return createLabeledComponent("Items:", itemScrollPane);
+    }
+
+    private JPanel getTaxRateField(){
         taxRateField = new SwingDesignInputField("Enter tax rate (%)");
-        panel.add(createLabeledComponent("Tax Rate (%):", taxRateField));
 
-        // Total amount display
+        taxRateField.setPreferredSize(new Dimension(400,50));
+        taxRateField.setMaximumSize(new Dimension(400,50));
+        taxRateField.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
+
+        return createLabeledComponent("Tax Rate (%):", taxRateField);
+    }
+
+    private JPanel getTotalAmountLabel(){
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+
         totalAmountLabel = new JLabel("Total: $0.00");
         totalAmountLabel.setFont(new Font("Arial", Font.BOLD, 18));
         totalAmountLabel.setForeground(TEXT_COLOR);
         totalAmountLabel.setBorder(new EmptyBorder(10, 0, 10, 0));
-        panel.add(totalAmountLabel);
+        totalAmountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panel.add(totalAmountLabel, BorderLayout.CENTER);
 
         return panel;
     }
 
     private JPanel createButtonPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         panel.setOpaque(false);
 
-        JButton createButton = new SwingDesignButton("Create Invoice").getButton();
-        createButton.addActionListener(e -> handleAddBill());
+        SwingDesignButton createButton = new SwingDesignButton("Create Bill");
+        JButton createButtonComponent = createButton.getButton();
+        createButtonComponent.addActionListener(e -> new AddBillCommand(billManager, clientComboBox, itemList, taxRateField, this).execute());
 
-        JButton cancelButton = new SwingDesignButton("Cancel").getButton();
-        cancelButton.addActionListener(e -> close());
-
-        panel.add(cancelButton);
         panel.add(createButton);
 
         return panel;
     }
 
-    private void handleAddBill() {
-        Client selectedClient = (Client) clientComboBox.getSelectedItem();
-        List<Item> selectedItems = itemList.getSelectedValuesList();
-        double taxRate;
-
-        try {
-            taxRate = Double.parseDouble(taxRateField.getTextField().getText()) / 100;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid tax rate", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (selectedClient == null || selectedItems.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please select a client and at least one item", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        List<BillItem> billItems = new ArrayList<>();
-        for (Item item : selectedItems) {
-            billItems.add(new BillItem(item, 1));
-        }
-
-        billManager.addBill(selectedClient, billItems, taxRate);
-        JOptionPane.showMessageDialog(this, "Invoice created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-        close();
-    }
-
     private Client[] getClientsArray() {
-        return new ClientManager().getClients().toArray(new Client[0]);
+        return new ClientManager().getClientsToArray();
     }
 
     private Item[] getItemsArray() {
-        return new ItemManager().getItems().toArray(new Item[0]);
+        return new ItemManager().getItemsToArray();
     }
 
     private JPanel createLabeledComponent(String labelText, Component component) {
@@ -146,7 +156,7 @@ public class SwingBillDialog extends JDialog implements BillFormDialog {
 
         JLabel label = new JLabel(labelText);
         label.setForeground(TEXT_COLOR);
-        label.setFont(TITLE_FONT);
+        label.setFont(TEXT_FONT);
 
         panel.add(label, BorderLayout.NORTH);
         panel.add(component, BorderLayout.CENTER);

@@ -31,4 +31,8 @@ public class BillManager {
     public List<Bill> getBills(){
         return new ArrayList<>(bills);
     }
+
+    public Bill[] getBillsToArray(){
+        return bills.toArray(new Bill[0]);
+    }
 }

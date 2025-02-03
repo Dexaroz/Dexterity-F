@@ -9,8 +9,9 @@ import software.dexterity.app.swing.itemsContent.SwingItemFormDialogFactory;
 import software.dexterity.app.swing.itemsContent.SwingItemContent;
 import software.dexterity.app.swing.topbar.SwingTopbarComponent;
 import software.dexterity.arquitecture.control.*;
-import software.dexterity.arquitecture.control.bill.AddBillCommand;
+import software.dexterity.arquitecture.control.bill.AddBillFormCommand;
 import software.dexterity.arquitecture.control.bill.BillsContentCommand;
+import software.dexterity.arquitecture.control.bill.CancelAddBillCommand;
 import software.dexterity.arquitecture.control.client.AddClientCommand;
 import software.dexterity.arquitecture.control.client.ClientsContentCommand;
 import software.dexterity.arquitecture.control.item.AddItemCommand;
@@ -99,7 +100,7 @@ public class MainFrame extends JFrame {
     private Map<String, Command> getBillCommands(){
         Map<String, Command> commands = new HashMap<>();
 
-        commands.put("Add", new AddBillCommand(this, billManager, new SwingBillFormDialogFactory(), getAddBillFormDialogCommands()));
+        commands.put("Add", new AddBillFormCommand(this, billManager, new SwingBillFormDialogFactory(), getAddBillFormDialogCommands()));
         return commands;
     }
 
@@ -118,7 +119,10 @@ public class MainFrame extends JFrame {
     }
 
     private Map<String, Command> getAddBillFormDialogCommands() {
-        return null;
+        Map<String, Command> commands = new HashMap<>();
+
+        commands.put("Cancel", new CancelAddBillCommand(null));
+        return commands;
     }
 
     private Map<String, Command> getAddClientFormDialogCommands() {

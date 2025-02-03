@@ -37,6 +37,9 @@ public class SwingDesignInputField extends JPanel implements VisualComponent {
         searchField.setOpaque(false);
         searchField.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        searchField.setMaximumSize(new Dimension(200, 25));
+        searchField.setMinimumSize(new Dimension(200, 25));
+
         searchField.setText(label);
         searchField.setFont(PLACEHOLDER_FONT);
         searchField.setForeground(Color.GRAY);
