@@ -51,9 +51,7 @@ public class MainFrame extends JFrame {
         this.add(currentContent, BorderLayout.CENTER);
     }
 
-    public void put(String name, Command command){
-        commands.put(name, command);
-    }
+    // Content visualization
 
     public void showHomeContent() {
         updateContent(new SwingHomeContent(billManager, getHomeCommands()));
@@ -69,43 +67,6 @@ public class MainFrame extends JFrame {
 
     public void showItemContent() {
         updateContent(new SwingItemContent(itemManager, getItemsCommands()));
-    }
-
-    public BillManager getBillManager(){
-        return billManager;
-    }
-
-    public ClientManager getClientManager(){
-        return clientManager;
-    }
-
-    public ItemManager getItemManager(){
-        return itemManager;
-    }
-
-    private Map<String, Command> getHomeCommands(){
-        return null;
-    }
-
-    private Map<String, Command> getBillCommands(){
-        Map<String, Command> commands = new HashMap<>();
-
-        commands.put("Add", new AddBillCommand(this, billManager, new SwingBillFormDialogFactory()));
-        return commands;
-    }
-
-    private Map<String, Command> getClientCommands(){
-        Map<String, Command> commands = new HashMap<>();
-
-        commands.put("Add", new AddClientCommand(this, clientManager, new SwingClientFormDialogFactory()));
-        return commands;
-    }
-
-    private Map<String, Command> getItemsCommands(){
-        Map<String, Command> commands = new HashMap<>();
-
-        commands.put("Add", new AddItemCommand(this, itemManager, new SwingItemFormDialogFactory()));
-        return commands;
     }
 
     private void updateContent(Component newContent) {
@@ -127,5 +88,56 @@ public class MainFrame extends JFrame {
         topbarComponent.addButton("Clients", new ClientsContentCommand(this));
         topbarComponent.addButton("Items", new ItemsContentCommand(this));
         return topbarComponent;
+    }
+
+    // Commands
+
+    private Map<String, Command> getHomeCommands(){
+        return null;
+    }
+
+    private Map<String, Command> getBillCommands(){
+        Map<String, Command> commands = new HashMap<>();
+
+        commands.put("Add", new AddBillCommand(this, billManager, new SwingBillFormDialogFactory(), getAddBillFormDialogCommands()));
+        return commands;
+    }
+
+    private Map<String, Command> getClientCommands(){
+        Map<String, Command> commands = new HashMap<>();
+
+        commands.put("Add", new AddClientCommand(this, clientManager, new SwingClientFormDialogFactory(), getAddClientFormDialogCommands()));
+        return commands;
+    }
+
+    private Map<String, Command> getItemsCommands(){
+        Map<String, Command> commands = new HashMap<>();
+
+        commands.put("Add", new AddItemCommand(this, itemManager, new SwingItemFormDialogFactory(), getAddItemFormDialogCommands()));
+        return commands;
+    }
+
+    private Map<String, Command> getAddBillFormDialogCommands() {
+        return null;
+    }
+
+    private Map<String, Command> getAddClientFormDialogCommands() {
+        return null;
+    }
+
+    private Map<String, Command> getAddItemFormDialogCommands() {
+        return null;
+    }
+
+    public BillManager getBillManager(){
+        return billManager;
+    }
+
+    public ClientManager getClientManager(){
+        return clientManager;
+    }
+
+    public ItemManager getItemManager(){
+        return itemManager;
     }
 }

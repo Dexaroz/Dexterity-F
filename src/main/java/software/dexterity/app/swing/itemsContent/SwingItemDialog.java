@@ -1,26 +1,29 @@
 package software.dexterity.app.swing.itemsContent;
 
+import software.dexterity.arquitecture.control.Command;
 import software.dexterity.arquitecture.model.managers.ItemManager;
 import software.dexterity.arquitecture.view.item.ItemFormDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class SwingItemDialog extends JDialog implements ItemFormDialog {
     private final ItemManager itemManager;
     private JTextField nameField;
     private JTextField descriptionField;
     private JTextField priceField;
+    private final Map<String, Command> commands;
 
-    public SwingItemDialog(JFrame parentFrame, ItemManager itemManager) {
+    public SwingItemDialog(JFrame parentFrame, ItemManager itemManager, Map<String, Command> commands) {
         super(parentFrame, "Add/Edit Item", true);
         this.itemManager = itemManager;
+        this.commands = commands;
 
         this.setSize(400, 300);
         this.setLocationRelativeTo(parentFrame);
         this.setLayout(new BorderLayout());
 
-        // Initialize form components
         this.add(createFormPanel(), BorderLayout.CENTER);
         this.add(createButtonPanel(), BorderLayout.SOUTH);
     }
@@ -29,17 +32,14 @@ public class SwingItemDialog extends JDialog implements ItemFormDialog {
         JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Name field
         panel.add(new JLabel("Item Name:"));
         nameField = new JTextField();
         panel.add(nameField);
 
-        // Description field
         panel.add(new JLabel("Description:"));
         descriptionField = new JTextField();
         panel.add(descriptionField);
 
-        // Price field
         panel.add(new JLabel("Price per Unit:"));
         priceField = new JTextField();
         panel.add(priceField);

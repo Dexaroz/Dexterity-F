@@ -3,6 +3,7 @@ package software.dexterity.app.swing.billsContent;
 import software.dexterity.app.swing.support.DarkGoldPalette;
 import software.dexterity.app.swing.support.SwingDesignButton;
 import software.dexterity.app.swing.support.SwingDesignInputField;
+import software.dexterity.arquitecture.control.Command;
 import software.dexterity.arquitecture.model.BillItem;
 import software.dexterity.arquitecture.model.Client;
 import software.dexterity.arquitecture.model.Item;
@@ -16,10 +17,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SwingBillDialog extends JDialog implements BillFormDialog {
 
     private static final Color BACKGROUND_COLOR = DarkGoldPalette.Background.getColor();
+    private static final Color SEARCH_INPUT_BACKGROUND = DarkGoldPalette.SearchInputBackground.getColor();
     private static final Color TEXT_COLOR = DarkGoldPalette.TextColor.getColor();
     private static final Font TITLE_FONT = new Font("Arial", Font.PLAIN, 14);
 
@@ -29,10 +32,12 @@ public class SwingBillDialog extends JDialog implements BillFormDialog {
     private JList<Item> itemList;
     private SwingDesignInputField taxRateField;
     private JLabel totalAmountLabel;
+    private Map<String, Command> commands;
 
-    public SwingBillDialog(JFrame parentFrame, BillManager billManager) {
+    public SwingBillDialog(JFrame parentFrame, BillManager billManager, Map<String, Command> commands) {
         super(parentFrame, "Create Bill", true);
         this.billManager = billManager;
+        this.commands = commands;
 
         this.setSize(700, 700);
         this.setMaximumSize(new Dimension(700, 700));

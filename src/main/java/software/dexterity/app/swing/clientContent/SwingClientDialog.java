@@ -1,10 +1,12 @@
 package software.dexterity.app.swing.clientContent;
 
+import software.dexterity.arquitecture.control.Command;
 import software.dexterity.arquitecture.model.managers.ClientManager;
 import software.dexterity.arquitecture.view.client.ClientFormDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class SwingClientDialog extends JDialog implements ClientFormDialog {
 
@@ -20,10 +22,12 @@ public class SwingClientDialog extends JDialog implements ClientFormDialog {
     private JTextField suiteField;
     private JTextField taxIDField;
     private final ClientManager clientManager;
+    private final Map<String, Command> commands;
 
-    public SwingClientDialog(JFrame parentFrame, ClientManager clientManager) {
+    public SwingClientDialog(JFrame parentFrame, ClientManager clientManager, Map<String, Command> commands) {
         super(parentFrame, "Add New Client", true);
         this.clientManager = clientManager;
+        this.commands = commands;
 
         this.setSize(600, 500);
         this.setLocationRelativeTo(parentFrame);
